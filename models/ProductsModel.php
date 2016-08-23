@@ -32,3 +32,15 @@ function getLastProducts($limit = null)
 		$rs = mysql_query($sql);
 		return mysql_fetch_assoc($rs);
 	}
+	
+// Получить список про-ов из массива идентиф-ов
+function getProductsFromArray($itemsIds)
+{	
+	$strIds = implode($itemsIds, ', ');
+	
+	$sql = "SELECT * FROM products WHERE id in ({$strIds})";
+	
+	$rs = mysql_query($sql);
+	
+	return createSmartyRsArray($rs);
+}

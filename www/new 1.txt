@@ -1,0 +1,1 @@
+RewriteRule ^([a-z]+)/$ /?controller=$1&%{QUERY_STRING} [NS,L]
