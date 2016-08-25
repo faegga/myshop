@@ -30,6 +30,7 @@ function registerNewUser ($email, $pwdMD5, $name, $phone, $adress)
 	}else{
 		$rs['success'] = 0;
 	}
+	
 	return $rs;
 }
 
@@ -54,4 +55,18 @@ function checkRegisterParams($email, $pwd1, $pwd2)
 		$res['message'] = 'Пароли не совпадают';
 	}
 	return $res;
+}
+
+// Проверка почты(есть ли email адрес в БД)
+// string $email
+// return array массив-строка из таблицы users, либо пустой массив
+function checkUserEmail($email)
+{
+	$email = mysql_real_escape_string($email);
+	$sql = "SELECT id FROM users WHERE email = '{$email}'";
+	
+	$rs = mysql_query($sql);
+	$rs = createSmartyRsArray($rs);
+	
+	return $rs;
 }
