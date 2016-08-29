@@ -79,9 +79,9 @@ function registerNewUser(){
 				//> блок в левом столбце
 				$('#registerBox').hide();
 				
-				//$('#userLink').attr('href', '/user');
-				//$('#userLink').html(data['userName']);
-				//$('#userBox').show();
+				$('#userLink').attr('href', '/user');
+				$('#userLink').html(data['userName']);
+				$('#userBox').show();
 				//<
 				//>страница заказа
 				//$('#loginBox').hide();
