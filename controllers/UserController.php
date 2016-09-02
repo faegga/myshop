@@ -71,7 +71,7 @@ function loginAction(){
 	$pwd = trim($pwd);
 	
 	$userData = loginUser($email, $pwd);
-	
+
 	if($userData['success']){
 		$userData = $userData[0];
 		
