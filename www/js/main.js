@@ -94,7 +94,7 @@ function registerNewUser(){
 	})
 }
 
-// Авторизация пользователя*/
+/* Авторизация пользователя*/
 function login(){
 	var email = $('#loginEmail').val();
 	var pwd = $('#loginPwd').val();
@@ -119,5 +119,14 @@ function login(){
 				alert (data['message']);
 			}
 		}
-	})
+	});
+}
+
+/* Показывать или прятать форму регистрации*/
+function showRegisterBox(){
+	if( $("#registerBoxHidden").css('display') != 'block' ) {
+		$("#registerBoxHidden").show();
+	}else {
+		$("#registerBoxHidden").hide();
+	}
 }
