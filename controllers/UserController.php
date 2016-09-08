@@ -89,3 +89,21 @@ function loginAction(){
 }
 	echo json_encode($resData);
 }
+
+/* Формирование главной страницы пользователя*/
+	function indexAction($smarty){
+	// Если пользователь не залогинился, то направляем на главную
+	if(! isset($_SESSION['user'])){
+		redirect('/');
+	}
+	// Получаем список категорий для меню
+	$rsCategories = getAllMainCatsWithChildren();
+
+	$smarty->assign('pageTitle', 'Страница пользователя');
+	$smarty->assign('rsCategories', $rsCategories);
+
+	loadTemplate($smarty, 'header');
+	loadTemplate($smarty, 'user');
+	loadTemplate($smarty, 'footer');
+
+}
