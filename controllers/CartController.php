@@ -59,3 +59,64 @@ function indexAction($smarty) {
 	loadTemplate($smarty, 'cart');
 	loadTemplate($smarty, 'footer');
 }
+
+// Формирование страницы заказа
+function orderAction($smarty){
+	// Получаем маасив идент-ов (id) продуктов корзины
+	$itemsIds = isset($_SESSION['cart']) ? $_SESSION['cart'] : null;
+	// если корзина пуста то перенаправляем в корзину
+	if(! $itemsIds){
+		redirect('/cart/');
+		return;
+	}
+	// получаем из массива $_POST кол-во покупаемых тов-ов
+	$itemsCnt = array();
+	foreach($itemsIds as $item){
+	// формируем ключ для массива POST
+	$postVar = 'itemCnt_' . $item;
+	//создаём элемент массива кол-ва покупаемого товара
+	// ключ массива - ID товара,значение массива-кол-во товара
+	//$itemsCnt[1]=3; товар с ID == покупают 3 штуки
+	$itemsCnt[$item] = isset($_POST[$postVar]) ? $_POST[$postVar] :null;
+	}
+//получаем список прод-ов по массиву корзины
+	$rsProducts = getProductsFromArray($itemsIds);
+	
+/*добавляем каждому продукту дополнительное поле
+"realPrice = кол-во продуктов * на цену продукта"
+"cnt" = кол-во покупаемого товара
+
+&$item - для того чтобы при изменении переменной 4item менялся и элемент массива $rsProducts*/
+$i = 0;
+foreach($rsProducts as &$item){
+	$item['cnt'] = isset($itemsCnt[$item['id']]) ? $itemsCnt[$item['id']] : 0;
+	if($item['cnt']){
+		$item['realPrice'] = $item['cnt'] * $item['price'];
+	}else {
+		//если вдруг получилось так что товар в корзине есть,а кол-во == нулю,то удаляем этот товара
+		unset($rsProducts[$i]);
+		
+	}
+	$i++;
+}
+	if(! $rsProducts){
+		echo "Корзина пуста";
+		return;
+	}
+// полученный массив покупаемых товаров помещаем в сессионную переменную
+	$_SESSION['saleCart'] = $rsProducts;
+	
+	$rsCategories = getAllMainCatsWithChildren();
+	
+	// hideLoginBox переменная-флаг для того чтобы спрятать блоки логина и рег-ции в боковой панели
+		if(! isset($_SESSION['user'])){
+			$smarty->assign('hideLoginBox', 1);
+		}
+	$smarty->assign('pageTitle', 'Заказ');
+	$smarty->assign('rsCategories', $rsCategories);
+	$smarty->assign('rsProducts', $rsProducts);
+	
+	loadTemplate($smarty, 'header');
+	loadTemplate($smarty, 'order');
+	loadTemplate($smarty, 'footer');
+}
