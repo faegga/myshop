@@ -9,7 +9,7 @@
 				Тел: {$phone}<br />
 				Адрес: {$adress}";
 				
-	$dataCreated =date('Y.m.d H:i:s');	
+	$dateCreated =date('Y.m.d H:i:s');	
 	$userIp      =$_SERVER['REMOTE_ADDR'];
 // запрос к БД
 	$sql = "INSERT INTO orders (`user_id`, `date_created`, `date_payment`, `status`, `comment`, `user_ip`)
@@ -29,3 +29,24 @@
 	}
 	return false;
 }
+
+// Получить список заказов с привязкой к продуктам для пользователя $userId
+	function getOrderWithProductsByUser($userId)
+	{
+		$userId = intval($userId);
+		$sql = "SELECT * FROM orders WHERE `user_id` = '{$userId}' ORDER BY id DESC";
+		
+		$rs = mysql_query($sql);
+		
+		$smartyRs = array();
+		while ($row = mysql_fetch_assoc($rs)) {
+			$rsChildren = getPurchaseForOrder($row['id']);
+			
+			if($rsChildren){
+				$row['children'] = $rsChildren;
+				$smartyRs[] = $row;
+			}
+		}
+		return $smartyRs;
+	}
+	

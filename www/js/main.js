@@ -84,8 +84,8 @@ function registerNewUser(){
 				$('#userBox').show();
 				//<
 				//>страница заказа
-				//$('#loginBox').hide();
-				//$('#btnSaveOrder').show();
+				$('#loginBox').hide();
+				$('#btnSaveOrder').show();
 				//<				
 			}else {
 				alert(data['message']);
@@ -185,10 +185,20 @@ function saveOrder(){
 		success: function(data){
 			if(data['success']){
 				alert(data['message']);
-				dicument.location = '/';
+				document.location = '/';
 			}else {
 				alert(data['message']);
 			}
 		}
 	});
+}
+
+/*Показывать или прятать данные о заказе*/
+function showProducts(id){
+	var objName = "#purchasesForOrderId_" + id;
+	if($(objName).css('display') != 'table-row') {
+		$(objName).show();
+	} else {
+		$(objName).hide();
+	}
 }
