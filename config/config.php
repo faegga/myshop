@@ -5,13 +5,16 @@
 
 	// используемый шаблон
 	$template = 'default';
+	$templateAdmin = 'admin';
 	
 	// пути к файлам шаблонов (*.tpl)
 	define ('TemplatePrefix', "../views/{$template}/");
+	define ('TemplateAdminPrefix', "../views/{$templateAdmin}/");
 	define ('TemplatePostfix', '.tpl');
 	
 	// пути к файлам шаблона в вебе
 	define ('TemplateWebPath', "/templates/{$template}/");
+	define ('TemplateAdminWebPath', "/templates/{$templateAdmin}/");
 	
 	// Инициализация Smarty-to Smarty.class.php
 	require ('../library/Smarty/libs/Smarty.class.php');

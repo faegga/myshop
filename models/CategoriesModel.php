@@ -46,3 +46,58 @@ function getCatById($catId)
 	$rs = mysql_query($sql);
 	return mysql_fetch_assoc($rs);
 }
+
+// Получить все главные категории (категорий которые не являются дочерними)
+	
+	function getAllMainCategories()
+	{
+		$sql = 'SELECT * FROM categories WHERE parent_id =0';
+		
+		$rs = mysql_query($sql);
+		
+		return createSmartyRsArray($rs);
+	}
+	
+// Добавление новой категории
+
+	function insertCat($catName, $catParentId= 0)
+	{
+	// готовим запрос
+	$sql = "INSERT INTO categories (`parent_id`, `name`) VALUES ('{$catParentId}', '{$catName}')";
+	// выполняем запрос
+	mysql_query($sql);
+	// получаем id добавленной записи
+	$id = mysql_insert_id();
+	
+	return $id;
+	}
+	
+	// Получить все категории
+	function getAllCategories()
+	{
+		$sql = 'SELECT * FROM categories ORDER BY parent_id ASC';
+		
+		$rs = mysql_query($sql);
+		
+		return createSmartyRsArray($rs);
+	}
+	
+	// Обновление категории
+	 function updateCategoryData($itemId, $parentId = -1, $newName = '')
+	{
+		$set = array();
+		
+		if($newName){
+			$set[] = " `name` = '{$newName}'";
+		}
+		if($parentId > -1){
+			$set[] = "`parent_id` = '{$parentId}'";
+		}
+		
+		$setStr = implode($set, ", ");
+		$sql = "UPDATE categories SET {$setStr} WHERE id = '{$itemId}'";
+		
+		$rs = mysql_query($sql);
+		
+		return $rs;
+	} 
