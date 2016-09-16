@@ -104,3 +104,54 @@
 		echo json_encode($resData);
 		return;
 	}
+	
+	function updateproductAction(){
+		$itemId = $_POST['itemId'];
+		$itemName = $_POST['itemName'];
+		$itemPrice = $_POST['itemPrice'];
+		$itemStatus = $_POST['itemStatus'];
+		$itemDesc = $_POST['itemDesc'];
+		$itemCat = $_POST['itemCatId'];
+		
+		$res = updateProduct ($itemId, $itemName, $itemPrice, $itemStatus, $itemDesc, $itemCat);
+		
+		if($res){
+			$resData['success'] = 1;
+			$resData['message'] = 'Изменения успешно внесены';
+		} else {
+			$resData['success'] = 0;
+			$resData['message'] = 'Ошибка изменения данных';
+		}
+		echo json_encode($resData);
+		return;
+	}
+	
+	function uploadAction(){
+		$maxSize = 2 * 1024 * 1024;
+		
+		$itemId = $_POST['itemId'];
+		//получаем расширение загружаемого файла
+		$ext = pathinfo($_FILES['filename']['name'], PATHINFO_EXTENSION);
+		//создаём имя файла
+		$newFileName = $itemId . '.' . $ext;
+		
+		if($_FILES["filename"]["size"] > $maxSize){
+			echo ("Размер файла превышает 2 мегабайта");
+			return;
+		}
+		//Загружен ли файла
+		if(is_uploaded_file($_FILES['filename']['tmp_name'])){
+		// Если файл загружен,то перемещаем его из временной директории в конечную
+		$res = move_uploaded_file($_FILES['filename']['tmp_name'], $_SERVER['DOCUMENT_ROOT']. '/images/products/'. $newFileName);
+		if($res){
+			$res = updateProductImage($itemId, $newFileName);
+		if($res){
+			redirect('/admin/products/');
+		}
+			
+		}	
+		} else {
+			echo("Ошибка загрузки файла");
+		}
+	
+	}
